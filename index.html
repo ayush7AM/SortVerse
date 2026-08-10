@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SortVerse</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Sort<span>Verse</span></h1>
+      <div class="subtitle">Comparisons in, order out — watch algorithms think.</div>
+    </div>
+    <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+  </header>
+
+  <div class="pills mode-tabs" id="modeTabs">
+    <button class="pill active" id="modeLearnBtn">📚 Learn Sorting</button>
+    <button class="pill" id="modeSingleBtn">🧍 Visualize Algorithm</button>
+    <button class="pill" id="modeArenaBtn">🏁 Battle Arena</button>
+  </div>
+
+  <!-- ===== LEARN SORTING VIEW ===== -->
+  <div id="learnView">
+    <div class="card learn-intro">
+      <div class="algo-name">📚 Learn Sorting</div>
+      <p class="learn-sub">Six classic sorting algorithms, explained one video at a time. Watch how each one thinks, then jump straight into the visualizer to see it in action on your own array.</p>
+    </div>
+    <div class="learn-grid" id="learnGrid">
+      <div class="learn-card">
+        <div class="learn-card-head">
+          <span class="learn-num">01</span>
+          <div><div class="learn-title">Bubble Sort</div><div class="learn-o">O(n²)</div></div>
+        </div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/zOhUavxlzw4" title="Bubble Sort" frameborder="0" allowfullscreen loading="lazy"></iframe></div>
+        <button class="btn ghost learn-try" data-algo="bubble">Visualize this algorithm →</button>
+      </div>
+
+      <div class="learn-card">
+        <div class="learn-card-head">
+          <span class="learn-num">02</span>
+          <div><div class="learn-title">Selection Sort</div><div class="learn-o">O(n²)</div></div>
+        </div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/UdO2NeHB46c" title="Selection Sort" frameborder="0" allowfullscreen loading="lazy"></iframe></div>
+        <button class="btn ghost learn-try" data-algo="selection">Visualize this algorithm →</button>
+      </div>
+
+      <div class="learn-card">
+        <div class="learn-card-head">
+          <span class="learn-num">03</span>
+          <div><div class="learn-title">Insertion Sort</div><div class="learn-o">O(n²)</div></div>
+        </div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/7kIVfVY6Axk" title="Insertion Sort" frameborder="0" allowfullscreen loading="lazy"></iframe></div>
+        <button class="btn ghost learn-try" data-algo="insertion">Visualize this algorithm →</button>
+      </div>
+
+      <div class="learn-card">
+        <div class="learn-card-head">
+          <span class="learn-num">04</span>
+          <div><div class="learn-title">Heap Sort</div><div class="learn-o">O(n log n)</div></div>
+        </div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/NKJnHewiGdc" title="Heap Sort" frameborder="0" allowfullscreen loading="lazy"></iframe></div>
+        <div class="learn-disclaimer">⚠️ Prerequisite: understanding of the Heap data structure (covered in the video).</div>
+        <button class="btn ghost learn-try" data-algo="heap">Visualize this algorithm →</button>
+      </div>
+
+      <div class="learn-card">
+        <div class="learn-card-head">
+          <span class="learn-num">05</span>
+          <div><div class="learn-title">Merge Sort</div><div class="learn-o">O(n log n)</div></div>
+        </div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/cdHEpbBVjRM" title="Merge Sort" frameborder="0" allowfullscreen loading="lazy"></iframe></div>
+        <button class="btn ghost learn-try" data-algo="merge">Visualize this algorithm →</button>
+      </div>
+
+      <div class="learn-card">
+        <div class="learn-card-head">
+          <span class="learn-num">06</span>
+          <div><div class="learn-title">Quick Sort</div><div class="learn-o">O(n log n)</div></div>
+        </div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/sNaHN4tZmRk" title="Quick Sort" frameborder="0" allowfullscreen loading="lazy"></iframe></div>
+        <button class="btn ghost learn-try" data-algo="quick">Visualize this algorithm →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SINGLE ALGORITHM VIEW ===== -->
+  <div id="singleView" style="display:none;">
+    <div class="pills" id="algoConsole">
+      <button class="pill active" data-algo="bubble" data-name="Bubble Sort" data-o="O(n²)">Bubble Sort</button>
+      <button class="pill" data-algo="selection" data-name="Selection Sort" data-o="O(n²)">Selection Sort</button>
+      <button class="pill" data-algo="insertion" data-name="Insertion Sort" data-o="O(n²)">Insertion Sort</button>
+      <button class="pill" data-algo="heap" data-name="Heap Sort" data-o="O(n log n)">Heap Sort</button>
+      <button class="pill" data-algo="quick" data-name="Quick Sort" data-o="O(n log n)">Quick Sort</button>
+      <button class="pill" data-algo="merge" data-name="Merge Sort" data-o="O(n log n)">Merge Sort</button>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="algo-name" id="algoTitle">Bubble Sort <span class="algo-o">O(n²)</span></div>
+        <div class="mini-stats">
+          <div>Time <b id="timeStat">0 ms</b></div>
+          <div>Comparisons <b id="compStat">0</b></div>
+          <div>Swaps <b id="swapStat">0</b></div>
+        </div>
+      </div>
+      <div id="chart"></div>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--base-b)"></span> Unsorted</span>
+        <span><span class="swatch" style="background:var(--comparing)"></span> Comparing</span>
+        <span><span class="swatch" style="background:var(--swapping)"></span> Swapping</span>
+        <span><span class="swatch" style="background:var(--sorted)"></span> Sorted</span>
+      </div>
+    </div>
+
+    <div class="card track-card" id="trackCard">
+      <div class="track-head">
+        <div class="track-title">Sorting Progress</div>
+        <div class="track-sub" id="trackSub">How comparisons and swaps piled up, step by step</div>
+      </div>
+      <svg id="trackSvg" viewBox="0 0 640 180" preserveAspectRatio="none"></svg>
+      <div class="legend">
+        <span><span class="swatch line" style="background:var(--accent)"></span> Comparisons</span>
+        <span><span class="swatch line" style="background:var(--swapping)"></span> Swaps</span>
+      </div>
+    </div>
+
+    <div class="card complexity-card" id="compCard">
+      <div class="track-head">
+        <div class="track-title">Complexity Analysis — <span id="compAlgoName">Bubble Sort</span></div>
+        <div class="track-sub">Theoretical bounds vs. what actually happened</div>
+      </div>
+      <div class="comp-cases">
+        <div class="comp-case" id="compBestBox"><div class="case-label">Best Case</div><div class="case-val" id="compBestVal">O(n)</div></div>
+        <div class="comp-case" id="compAvgBox"><div class="case-label">Average Case</div><div class="case-val" id="compAvgVal">O(n²)</div></div>
+        <div class="comp-case" id="compWorstBox"><div class="case-label">Worst Case</div><div class="case-val" id="compWorstVal">O(n²)</div></div>
+      </div>
+      <div class="comp-space">Space Complexity: <b id="compSpaceVal">O(1)</b></div>
+      <div class="comp-note" id="compNote">Run a sort to see how it measures up.</div>
+    </div>
+  </div>
+
+  <!-- ===== BATTLE ARENA VIEW ===== -->
+  <div id="arenaView" style="display:none;">
+    <div class="card">
+      <div class="card-top">
+        <div class="algo-name">🏁 Sorting Battle Arena</div>
+        <div class="mini-stats"><div>All six algorithms race the same shuffled array</div></div>
+      </div>
+      <div class="arena-grid" id="arenaGrid"></div>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--base-b)"></span> Unsorted</span>
+        <span><span class="swatch" style="background:var(--comparing)"></span> Comparing</span>
+        <span><span class="swatch" style="background:var(--swapping)"></span> Swapping</span>
+        <span><span class="swatch" style="background:var(--sorted)"></span> Sorted</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="track-title" style="margin-bottom:12px;">Live Leaderboard</div>
+      <table class="leaderboard">
+        <thead><tr><th>Algorithm</th><th>Time</th><th>Swaps</th><th>Comparisons</th><th>Status</th></tr></thead>
+        <tbody id="leaderboardBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="controls" id="controlsBar">
+    <div class="field">
+      <label>Array Size</label>
+      <input type="range" id="sizeSlider" min="10" max="120" value="35">
+      <span class="val" id="sizeVal">35 bars</span>
+    </div>
+    <div class="field">
+      <label>Speed</label>
+      <input type="range" id="speedSlider" min="1" max="100" value="60">
+      <span class="val" id="speedVal">Fast</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="actions">
+      <button class="btn ghost" id="shuffleBtn">🎲 New Array</button>
+      <button class="btn primary" id="sortBtn">▶ Start</button>
+      <button class="btn warn" id="pauseBtn" disabled>⏸ Pause</button>
+      <button class="btn warn" id="stopBtn" disabled>■ Stop</button>
+    </div>
+    <div style="width:100%;">
+      <button class="custom-toggle" id="customToggle">Use your own numbers instead →</button>
+      <div class="custom-panel" id="customPanel">
+        <div class="field" style="flex:1;">
+          <label>Custom values (comma-separated, max 120)</label>
+          <input type="text" id="customInput" placeholder="e.g. 25,37,44,45,49,50,51,53">
+        </div>
+        <button class="btn ghost" id="applyCustomBtn">Apply</button>
+        <div class="error-msg" id="customError"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>SortVerse — bars in motion</footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
