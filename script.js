@@ -35,12 +35,17 @@
   const modeSingleBtn = document.getElementById('modeSingleBtn');
   const modeArenaBtn = document.getElementById('modeArenaBtn');
   const modeLearnBtn = document.getElementById('modeLearnBtn');
+  const modePracticeBtn = document.getElementById('modePracticeBtn');
   const singleView = document.getElementById('singleView');
   const arenaView = document.getElementById('arenaView');
   const learnView = document.getElementById('learnView');
+  const practiceView = document.getElementById('practiceView');
   const controlsBar = document.getElementById('controlsBar');
   const arenaGrid = document.getElementById('arenaGrid');
   const leaderboardBody = document.getElementById('leaderboardBody');
+  const practiceList = document.getElementById('practiceList');
+  const practiceWorkspace = document.getElementById('practiceWorkspace');
+  const practiceProgress = document.getElementById('practiceProgress');
 
   const MAX_SIZE = 120;
   const ALGO_LIST = [
@@ -141,18 +146,22 @@
     currentMode = m;
     arenaMode = (m === 'arena');
     const learnMode = (m === 'learn');
+    const practiceMode = (m === 'practice');
     modeLearnBtn.classList.toggle('active', learnMode);
     modeSingleBtn.classList.toggle('active', m === 'single');
     modeArenaBtn.classList.toggle('active', arenaMode);
+    modePracticeBtn.classList.toggle('active', practiceMode);
     learnView.style.display = learnMode ? 'block' : 'none';
     singleView.style.display = (m === 'single') ? 'block' : 'none';
     arenaView.style.display = arenaMode ? 'block' : 'none';
-    controlsBar.style.display = learnMode ? 'none' : 'flex';
+    practiceView.style.display = practiceMode ? 'block' : 'none';
+    controlsBar.style.display = (learnMode || practiceMode) ? 'none' : 'flex';
     if (arenaMode) buildArena(true);
   }
   modeLearnBtn.addEventListener('click', () => { if (!sorting && !arenaRunning) setMode('learn'); });
   modeSingleBtn.addEventListener('click', () => { if (!sorting && !arenaRunning) setMode('single'); });
   modeArenaBtn.addEventListener('click', () => { if (!sorting && !arenaRunning) setMode('arena'); });
+  modePracticeBtn.addEventListener('click', () => { if (!sorting && !arenaRunning) setMode('practice'); });
 
   document.querySelectorAll('.learn-try').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -168,6 +177,261 @@
       newRandomArray();
     });
   });
+
+  // ================= PRACTICE MODE =================
+
+  const PRACTICE_KEY = 'sortverse-practice-solved';
+  const PRACTICE_PROBLEMS = [
+    {
+      id:'bubble-basic', algo:'Bubble Sort', title:'Build Bubble Sort',
+      statement:'Implement Bubble Sort from scratch. Repeatedly compare neighboring values and swap them when they are out of order. Return the sorted array in ascending order.',
+      fn:'bubbleSort',
+      starter:`function bubbleSort(arr) {
+  // Sort arr in ascending order and return it.
+  return arr;
+}`,
+      tests:[{input:[[5,1,4,2,8]], expected:[1,2,4,5,8]}, {input:[[]], expected:[]}, {input:[[3,3,1,2]], expected:[1,2,3,3]}, {input:[[9,7,5,3,1]], expected:[1,3,5,7,9]}]
+    },
+    {
+      id:'bubble-early-exit', algo:'Bubble Sort', title:'Stop When Sorted',
+      statement:'Optimize Bubble Sort with early termination. If a full pass makes no swaps, the array is already sorted, so stop immediately and return it.',
+      fn:'bubbleSortOptimized',
+      starter:`function bubbleSortOptimized(arr) {
+  // Return arr sorted in ascending order.
+  return arr;
+}`,
+      tests:[{input:[[1,2,3,4]], expected:[1,2,3,4]}, {input:[[4,1,3,2]], expected:[1,2,3,4]}, {input:[[2,1]], expected:[1,2]}, {input:[[7]], expected:[7]}]
+    },
+    {
+      id:'selection-basic', algo:'Selection Sort', title:'Pick the Minimum',
+      statement:'Implement Selection Sort from scratch. For each position, find the smallest remaining value and place it there. Return the sorted array.',
+      fn:'selectionSort',
+      starter:`function selectionSort(arr) {
+  // Sort arr in ascending order and return it.
+  return arr;
+}`,
+      tests:[{input:[[64,25,12,22,11]], expected:[11,12,22,25,64]}, {input:[[3,1,2]], expected:[1,2,3]}, {input:[[]], expected:[]}, {input:[[5,5,2,5]], expected:[2,5,5,5]}]
+    },
+    {
+      id:'selection-kth', algo:'Selection Sort', title:'Find the K-th Smallest',
+      statement:'Use selection-sort thinking to find the k-th smallest value without fully sorting the array. Here k is 1-based, and inputs contain valid k values.',
+      fn:'kthSmallest',
+      starter:`function kthSmallest(arr, k) {
+  // Return the 1-based k-th smallest value.
+  return arr[0];
+}`,
+      tests:[{input:[[7,10,4,3,20,15],3], expected:7}, {input:[[1,2,3,4],1], expected:1}, {input:[[9,8,7,6],4], expected:9}, {input:[[5,5,2,8],2], expected:5}]
+    },
+    {
+      id:'insertion-basic', algo:'Insertion Sort', title:'Build Insertion Sort',
+      statement:'Implement Insertion Sort from scratch. Grow a sorted prefix by inserting each next value into its correct position. Return the sorted array.',
+      fn:'insertionSort',
+      starter:`function insertionSort(arr) {
+  // Sort arr in ascending order and return it.
+  return arr;
+}`,
+      tests:[{input:[[12,11,13,5,6]], expected:[5,6,11,12,13]}, {input:[[4,3,2,1]], expected:[1,2,3,4]}, {input:[[1,2,3]], expected:[1,2,3]}, {input:[[2,1,2,0]], expected:[0,1,2,2]}]
+    },
+    {
+      id:'insertion-into-list', algo:'Insertion Sort', title:'Insert Into a Sorted List',
+      statement:'Insert one value into an already sorted array and return a new sorted array. Do not mutate the input array.',
+      fn:'insertSorted',
+      starter:`function insertSorted(sorted, value) {
+  // Return a new sorted array containing value.
+  return sorted;
+}`,
+      tests:[{input:[[1,3,5,7],4], expected:[1,3,4,5,7]}, {input:[[],2], expected:[2]}, {input:[[2,4,6],1], expected:[1,2,4,6]}, {input:[[1,2,2,4],2], expected:[1,2,2,2,4]}]
+    },
+    {
+      id:'merge-step', algo:'Merge Sort', title:'Merge Two Sorted Halves',
+      statement:'Implement the merge step used by Merge Sort. Combine two sorted arrays into one sorted array in linear time, without relying on a built-in sort.',
+      fn:'mergeSorted',
+      starter:`function mergeSorted(left, right) {
+  // Return one sorted array containing both halves.
+  return left.concat(right);
+}`,
+      tests:[{input:[[1,4,7],[2,3,6]], expected:[1,2,3,4,6,7]}, {input:[[],[1,2]], expected:[1,2]}, {input:[[0,5],[]], expected:[0,5]}, {input:[[2,2,9],[1,2,8]], expected:[1,2,2,2,8,9]}]
+    },
+    {
+      id:'merge-inversions', algo:'Merge Sort', title:'Count Inversions',
+      statement:'Count pairs of indices i and j where i < j but arr[i] > arr[j]. Use a merge-sort strategy so the count scales better than checking every pair.',
+      fn:'countInversions',
+      starter:`function countInversions(arr) {
+  // Return the number of inversions in arr.
+  return 0;
+}`,
+      tests:[{input:[[1,20,6,4,5]], expected:5}, {input:[[1,2,3,4]], expected:0}, {input:[[4,3,2,1]], expected:6}, {input:[[2,1,3,1,2]], expected:4}]
+    },
+    {
+      id:'quick-lomuto', algo:'Quick Sort', title:'Partition with Lomuto',
+      statement:'Implement Quick Sort using Lomuto partitioning: choose the last value as pivot, partition smaller values to its left, then recurse. Return the sorted array.',
+      fn:'quickSort',
+      starter:`function quickSort(arr) {
+  // Sort arr in ascending order and return it.
+  return arr;
+}`,
+      tests:[{input:[[10,7,8,9,1,5]], expected:[1,5,7,8,9,10]}, {input:[[3,1,2]], expected:[1,2,3]}, {input:[[4,4,2,1]], expected:[1,2,4,4]}, {input:[[]], expected:[]}]
+    },
+    {
+      id:'quick-kth-largest', algo:'Quick Sort', title:'Find the K-th Largest',
+      statement:'Use partitioning to find the k-th largest value, where k is 1-based. You may sort a copy or narrow the search range with a selection strategy.',
+      fn:'kthLargest',
+      starter:`function kthLargest(arr, k) {
+  // Return the 1-based k-th largest value.
+  return arr[0];
+}`,
+      tests:[{input:[[3,2,1,5,6,4],2], expected:5}, {input:[[7,10,4,3,20,15],1], expected:20}, {input:[[1,2,3,4],4], expected:1}, {input:[[5,5,2,8],2], expected:5}]
+    }
+  ];
+
+  let practiceProblems = PRACTICE_PROBLEMS.slice();
+  let practiceActiveIndex = 0;
+  let practiceLanguage = 'javascript';
+  let practiceSolved = new Set();
+  try { practiceSolved = new Set(JSON.parse(localStorage.getItem(PRACTICE_KEY) || '[]')); } catch (e) { practiceSolved = new Set(); }
+
+  function shuffleProblems(list){
+    for (let i = list.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [list[i], list[j]] = [list[j], list[i]];
+    }
+    return list;
+  }
+  function practiceDisplay(value){
+    if (value === undefined) return 'undefined';
+    try { return JSON.stringify(value); } catch (e) { return String(value); }
+  }
+  function practiceEqual(actual, expected){
+    return practiceDisplay(actual) === practiceDisplay(expected);
+  }
+  function updatePracticeProgress(){
+    practiceProgress.textContent = 'Solved ' + practiceSolved.size + '/10';
+  }
+  function practiceStarter(problem, language){
+    const names = {
+      'bubble-basic':['bubbleSort','arr'], 'bubble-early-exit':['bubbleSortOptimized','arr'],
+      'selection-basic':['selectionSort','arr'], 'selection-kth':['kthSmallest','arr, k'],
+      'insertion-basic':['insertionSort','arr'], 'insertion-into-list':['insertSorted','sorted, value'],
+      'merge-step':['mergeSorted','left, right'], 'merge-inversions':['countInversions','arr'],
+      'quick-lomuto':['quickSort','arr'], 'quick-kth-largest':['kthLargest','arr, k']
+    }[problem.id];
+    if (language === 'javascript') return problem.starter;
+    if (language === 'python') return 'def ' + names[0] + '(' + names[1] + '):\n    # Return the requested result.\n    pass';
+    const returnsNumber = problem.id === 'selection-kth' || problem.id === 'merge-inversions' || problem.id === 'quick-kth-largest';
+    const cppArgs = problem.id === 'selection-kth' || problem.id === 'quick-kth-largest' ? 'vector<int> arr, int k' : problem.id === 'insertion-into-list' ? 'vector<int> sorted, int value' : problem.id === 'merge-step' ? 'vector<int> left, vector<int> right' : 'vector<int> arr';
+    const javaArgs = problem.id === 'selection-kth' || problem.id === 'quick-kth-largest' ? 'int[] arr, int k' : problem.id === 'insertion-into-list' ? 'int[] sorted, int value' : problem.id === 'merge-step' ? 'int[] left, int[] right' : 'int[] arr';
+    if (language === 'cpp') return '#include <vector>\nusing namespace std;\n\n' + (returnsNumber ? 'int ' : 'vector<int> ') + names[0] + '(' + cppArgs + ') {\n    // Return the requested result.\n    ' + (returnsNumber ? 'return 0;' : 'return arr;') + '\n}';
+    return 'import java.util.*;\n\nclass Solution {\n    public static ' + (returnsNumber ? 'int ' : 'int[] ') + names[0] + '(' + javaArgs + ') {\n        // Return the requested result.\n        ' + (returnsNumber ? 'return 0;' : 'return arr;') + '\n    }\n}';
+  }
+  function renderPracticeList(){
+    practiceList.innerHTML = practiceProblems.map((problem, index) => {
+      const solved = practiceSolved.has(problem.id);
+      return '<button class="practice-item ' + (index === practiceActiveIndex ? 'active ' : '') + (solved ? 'solved' : '') + '" data-practice-index="' + index + '">' +
+        '<span class="practice-number">' + String(index + 1).padStart(2, '0') + '</span>' +
+        '<span class="practice-item-title">' + problem.title + '</span>' +
+        '<span class="practice-status">' + (solved ? '✓' : '·') + '</span></button>';
+    }).join('');
+    updatePracticeProgress();
+  }
+  function renderTestCases(problem, results){
+    return '<div class="tests-label">Test cases</div><div class="test-list">' + problem.tests.map((test, index) => {
+      const result = results && results[index];
+      const passed = result && result.passed;
+      const io = result && !passed ? '<div class="test-io">Actual: <code>' + practiceDisplay(result.actual) + '</code><br>Expected: <code>' + practiceDisplay(test.expected) + '</code></div>' : '';
+      return '<div class="test-case"><div class="test-case-head"><span>Case ' + (index + 1) + ' · Input <span class="test-io"><code>' + practiceDisplay(test.input) + '</code></span></span><span class="test-result ' + (result ? (passed ? 'pass' : 'fail') : '') + '">' + (result ? (passed ? 'Pass ✓' : 'Fail ✗') : 'Not run') + '</span></div>' + io + '</div>';
+    }).join('') + '</div>';
+  }
+  function renderPracticeProblem(){
+    const problem = practiceProblems[practiceActiveIndex];
+    const solved = practiceSolved.has(problem.id);
+    const starter = practiceStarter(problem, practiceLanguage).replace(/</g, '&lt;');
+    const canRun = true;
+    practiceWorkspace.innerHTML = '<div class="practice-heading"><h2>' + problem.title + '</h2><span class="algo-tag">' + problem.algo + '</span></div>' +
+      '<p class="practice-statement">' + problem.statement + '</p>' +
+      '<div class="practice-editor-head"><div class="editor-label">Your solution</div><select class="language-select" id="practiceLanguage" aria-label="Practice language"><option value="javascript" ' + (practiceLanguage === 'javascript' ? 'selected' : '') + '>JavaScript</option><option value="python" ' + (practiceLanguage === 'python' ? 'selected' : '') + '>Python</option><option value="cpp" ' + (practiceLanguage === 'cpp' ? 'selected' : '') + '>C++</option><option value="java" ' + (practiceLanguage === 'java' ? 'selected' : '') + '>Java</option></select></div>' +
+      '<textarea class="code-editor" id="practiceEditor" spellcheck="false" aria-label="Practice solution">' + starter + '</textarea>' +
+      '<div class="practice-actions"><button class="btn primary" id="practiceRunBtn">▶ Run</button><button class="btn ghost" id="practiceSubmitBtn" disabled>✓ Submit</button><span class="run-status" id="practiceRunStatus">Run all tests before submitting.</span></div>' +
+      '<div id="practiceTests">' + renderTestCases(problem, null) + '</div>' +
+      (solved ? '<div class="solved-note">Solved ✓ This problem is complete.</div>' : '');
+    document.getElementById('practiceLanguage').addEventListener('change', event => {
+      practiceLanguage = event.target.value;
+      renderPracticeProblem();
+    });
+    document.getElementById('practiceRunBtn').addEventListener('click', runPracticeTests);
+    document.getElementById('practiceSubmitBtn').addEventListener('click', submitPracticeProblem);
+  }
+  function selectPractice(index){
+    practiceActiveIndex = index;
+    renderPracticeList();
+    renderPracticeProblem();
+  }
+  function runPracticeTests(){
+    const problem = practiceProblems[practiceActiveIndex];
+    const editor = document.getElementById('practiceEditor');
+    const runBtn = document.getElementById('practiceRunBtn');
+    const status = document.getElementById('practiceRunStatus');
+    runBtn.disabled = true;
+    status.textContent = 'Running tests...';
+    const showResults = results => {
+      const passedAll = results.every(result => result.passed);
+      document.getElementById('practiceTests').innerHTML = renderTestCases(problem, results);
+      document.getElementById('practiceSubmitBtn').disabled = !passedAll;
+      status.textContent = passedAll ? 'All tests pass. Submit when ready.' : 'Some tests failed. Keep going.';
+      runBtn.disabled = false;
+    };
+    if (practiceLanguage !== 'javascript'){
+      fetch('/api/run', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({language:practiceLanguage, problemId:problem.id, fn:problem.fn, code:editor.value, tests:problem.tests})})
+        .then(response => response.json().then(data => ({ok:response.ok, data:data})))
+        .then(result => { if (!result.ok || result.data.error) throw new Error(result.data.error || 'The local runner failed.'); showResults(result.data.results); })
+        .catch(error => { status.textContent = error.message; runBtn.disabled = false; });
+      return;
+    }
+    const workerSource = `self.onmessage = function(event) {
+  const data = event.data;
+  try {
+    const getSolution = new Function('"use strict";\\n' + data.code + '\\nreturn ' + data.fn);
+    const solution = getSolution();
+    if (typeof solution !== 'function') throw new Error('Define ' + data.fn + ' as a function.');
+    const results = data.tests.map(function(test) {
+      const actual = solution.apply(null, JSON.parse(JSON.stringify(test.input)));
+      return { actual: actual, passed: JSON.stringify(actual) === JSON.stringify(test.expected) };
+    });
+    self.postMessage({results: results});
+  } catch (error) { self.postMessage({error: error.message || String(error)}); }
+};`;
+    const workerUrl = URL.createObjectURL(new Blob([workerSource], {type:'text/javascript'}));
+    const worker = new Worker(workerUrl);
+    let finished = false;
+    const finish = (callback) => { if (finished) return; finished = true; clearTimeout(timeout); worker.terminate(); URL.revokeObjectURL(workerUrl); callback(); };
+    const timeout = setTimeout(() => finish(() => {
+      status.textContent = 'Timed out. Check for an infinite loop.';
+      runBtn.disabled = false;
+    }), 2000);
+    worker.onmessage = event => finish(() => {
+      if (event.data.error){
+        status.textContent = event.data.error;
+        document.getElementById('practiceTests').innerHTML = renderTestCases(problem, null);
+        runBtn.disabled = false;
+        return;
+      }
+      showResults(event.data.results);
+    });
+    worker.postMessage({code: editor.value, fn: problem.fn, tests: problem.tests});
+  }
+  function submitPracticeProblem(){
+    const problem = practiceProblems[practiceActiveIndex];
+    practiceSolved.add(problem.id);
+    localStorage.setItem(PRACTICE_KEY, JSON.stringify([...practiceSolved]));
+    renderPracticeList();
+    renderPracticeProblem();
+  }
+  practiceList.addEventListener('click', event => {
+    const item = event.target.closest('[data-practice-index]');
+    if (item) selectPractice(Number(item.dataset.practiceIndex));
+  });
+  shuffleProblems(practiceProblems);
+  renderPracticeList();
+  renderPracticeProblem();
 
   // ---------- shared timing helpers ----------
   function speedDelay(){

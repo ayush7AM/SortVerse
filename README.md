@@ -58,6 +58,12 @@ Whether you're a CS student cramming for exams, a self-taught developer filling 
 <img src="screenshots/dark-mode.png" alt="Dark Mode" width="100%" />
 </details>
 
+<details>
+<summary><b>🎯 Practice Mode</b> — Write, run, and submit sorting solutions</summary>
+<br>
+Practice Mode provides coding exercises with a built-in editor, visible test cases, and progress tracking.
+</details>
+
 ---
 
 ## ✨ Features
@@ -67,12 +73,29 @@ Whether you're a CS student cramming for exams, a self-taught developer filling 
 | 📚 **Learn Mode** | Curated YouTube tutorials for each algorithm with a "Visualize this →" button that drops you straight into the action |
 | 🧍 **Single Visualizer** | Pick an algorithm, tweak the array size & speed, and watch it sort in real-time with color-coded bars |
 | 🏁 **Battle Arena** | All 6 algorithms race the **same shuffled array** simultaneously — with a live leaderboard tracking time, swaps & comparisons |
+| 🎯 **Practice Mode** | Solve 10 shuffled coding problems covering Bubble, Selection, Insertion, Merge, and Quick Sort |
 | 📊 **Progress Chart** | SVG line chart showing how comparisons and swaps accumulate over time |
 | 🧠 **Complexity Analysis** | After each sort, see best/avg/worst case complexities with a verdict on how your run measured up |
 | 🎲 **Random & Custom Arrays** | Generate random arrays or type your own comma-separated values |
 | ⏸️ **Pause / Resume / Stop** | Full playback control — pause mid-sort, resume, or kill it entirely |
 | 🌙 **Dark Mode** | One-click theme toggle that doesn't reset your sort state |
 | 📱 **Responsive** | Works on desktop, tablet, and mobile screens |
+
+### 🎯 Practice Mode
+
+Practice Mode turns sorting concepts into hands-on coding challenges. Each problem includes a short statement, starter template, 3–5 visible test cases, and a Run button that reports **Pass ✓** or **Fail ✗** with actual output on failures.
+
+There are **10 total problems**, shuffled when the page loads:
+
+| Algorithm | Practice Problems |
+|---|---|
+| **Bubble Sort** | Implement Bubble Sort; optimize it with early termination |
+| **Selection Sort** | Implement Selection Sort; find the k-th smallest value |
+| **Insertion Sort** | Implement Insertion Sort; insert into a sorted list |
+| **Merge Sort** | Implement the merge step; count inversions |
+| **Quick Sort** | Implement Lomuto-partition Quick Sort; find the k-th largest value |
+
+Solutions can be written in **JavaScript, Python, C++, or Java**. JavaScript runs in an isolated browser worker; Python, C++, and Java run through the local `server.py` execution endpoint. Submit becomes available only after every test passes, and solved problems persist in `localStorage`.
 
 ---
 
@@ -106,7 +129,7 @@ While watching the visualizer, the bars change color to show what's happening un
 
 ## 🚀 Getting Started
 
-SortVerse is a **zero-dependency** static site. No npm install, no build step, no frameworks. Just HTML, CSS, and JavaScript doing what they do best.
+SortVerse is a **zero-dependency** site. No npm install, no build step, no frameworks. The optional local Python server adds Practice execution for Python, C++, and Java.
 
 ### Run it locally
 
@@ -114,19 +137,17 @@ SortVerse is a **zero-dependency** static site. No npm install, no build step, n
 # Clone the repo
 git clone https://github.com/ayush7AM/SortVerse.git
 
-# Open it
+# Start it with the Practice runner
 cd SortVerse
-open index.html        # macOS
+python3 server.py       # macOS, Python/C++/Java Practice runs
 # or
-start index.html       # Windows
-# or
-xdg-open index.html    # Linux
+open http://localhost:8080
 ```
 
 Or just use a live server:
 
 ```bash
-# With Python
+# Static-only server (JavaScript Practice only)
 python3 -m http.server 8080
 
 # With Node
@@ -143,9 +164,10 @@ npx serve .
 
 ```
 SortVerse/
-├── index.html          # The entire UI — three views, one page
+├── index.html          # The entire UI — four views, one page
 ├── style.css           # Design system with light/dark themes
-├── script.js           # All 6 sorting algorithms + arena logic
+├── script.js           # Sorting, arena, and Practice UI logic
+├── server.py           # Local Python/C++/Java Practice runner
 ├── screenshots/        # README screenshots
 └── README.md           # You are here 👋
 ```

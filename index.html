@@ -21,6 +21,7 @@
     <button class="pill active" id="modeLearnBtn">📚 Learn Sorting</button>
     <button class="pill" id="modeSingleBtn">🧍 Visualize Algorithm</button>
     <button class="pill" id="modeArenaBtn">🏁 Battle Arena</button>
+    <button class="pill" id="modePracticeBtn">🎯 Practice</button>
   </div>
 
   <!-- ===== LEARN SORTING VIEW ===== -->
@@ -164,6 +165,26 @@
         <thead><tr><th>Algorithm</th><th>Time</th><th>Swaps</th><th>Comparisons</th><th>Status</th></tr></thead>
         <tbody id="leaderboardBody"></tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- ===== PRACTICE VIEW ===== -->
+  <div id="practiceView" style="display:none;">
+    <div class="card practice-intro">
+      <div class="card-top">
+        <div>
+          <div class="algo-name">🎯 Practice</div>
+          <p class="learn-sub">Build sorting instincts by writing, testing, and submitting one small solution at a time.</p>
+        </div>
+        <div class="practice-progress" id="practiceProgress">Solved 0/10</div>
+      </div>
+    </div>
+    <div class="practice-layout">
+      <aside class="card practice-list-card">
+        <div class="track-title">Problem Set</div>
+        <div class="practice-list" id="practiceList"></div>
+      </aside>
+      <main class="card practice-workspace" id="practiceWorkspace"></main>
     </div>
   </div>
 
