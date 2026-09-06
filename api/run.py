@@ -19,7 +19,7 @@ class handler(BaseHTTPRequestHandler):
             if language == "python":
                 self._send(run_python(payload))
             elif language in ("cpp", "java"):
-                self._send(run_wandbox(payload))
+                self._send(run_piston(payload))
             else:
                 self._send({"error": "Unsupported language."}, 400)
         except Exception as error:
@@ -78,7 +78,7 @@ def call_expression(payload, test):
     return f"{prefix}{function_name}({array_literal(inputs[0], payload['language'])})"
 
 
-def run_wandbox(payload):
+def run_piston(payload):
     language = payload["language"]
     numeric_result = payload["problemId"] in ("how-many-picks", "how-many-slides")
     lines = []
@@ -98,28 +98,40 @@ def run_wandbox(payload):
 
     if language == "cpp":
         harness = '''\n#include <bits/stdc++.h>\nusing namespace std;\nstring repr(const vector<int>& values) { string result; for (size_t i = 0; i < values.size(); i++) { if (i) result += ","; result += to_string(values[i]); } return result; }\nint main() {\n''' + "\n".join(lines) + "\nreturn 0; }\n"
-        compiler = "gcc-13.2.0"
+        piston_language = "c++"
     else:
         harness = '''\nclass Runner {\n    static String repr(int[] values) { StringBuilder result = new StringBuilder(); for (int i = 0; i < values.length; i++) { if (i > 0) result.append(","); result.append(values[i]); } return result.toString(); }\n    public static void main(String[] args) {\n''' + "\n".join(lines) + "\n    }\n}\n"
-        compiler = "openjdk-jdk-22+36"
+        piston_language = "java"
 
     request = urllib.request.Request(
-        "https://wandbox.org/api/compile.json",
-        data=json.dumps({"compiler": compiler, "code": payload["code"] + harness}).encode("utf-8"),
+        "https://emkc.org/api/v2/piston/execute",
+        data=json.dumps({
+            "language": piston_language,
+            "version": "*",
+            "files": [{"content": payload["code"] + harness}]
+        }).encode("utf-8"),
         headers={"Content-Type": "application/json", "User-Agent": "SortVerse/1.0"},
         method="POST",
     )
     try:
-        with urllib.request.urlopen(request, timeout=15) as response:
+        with urllib.request.urlopen(request, timeout=20) as response:
             result = json.loads(response.read().decode("utf-8"))
     except Exception as error:
         return {"error": "Hosted compiler unavailable: " + str(error)}
-    if result.get("compiler_error") or result.get("program_error"):
-        return {"error": (result.get("compiler_error") or result.get("program_error") or "Compilation failed").strip()[-1200:]}
-    return {"results": parse_wandbox_results(result.get("program_output", ""), payload["tests"])}
+
+    compile_out = result.get("compile", {})
+    run_out = result.get("run", {})
+
+    if compile_out.get("code") and compile_out.get("code") != 0:
+        return {"error": (compile_out.get("stderr") or compile_out.get("output") or "Compilation failed.").strip()[-1200:]}
+    if run_out.get("code") and run_out.get("code") != 0:
+        return {"error": (run_out.get("stderr") or run_out.get("output") or "Runtime error.").strip()[-1200:]}
+
+    program_output = run_out.get("stdout") or run_out.get("output") or ""
+    return {"results": parse_output_results(program_output, payload["tests"])}
 
 
-def parse_wandbox_results(output, tests):
+def parse_output_results(output, tests):
     results = []
     for line, test in zip(output.splitlines(), tests):
         parts = line.split("\t", 1)
