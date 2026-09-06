@@ -36,20 +36,12 @@ def call_parts(problem_id, language, fn, test):
     inputs = test['input']
     if language == 'cpp':
         vector = cpp_vector
-        if problem_id in ('selection-kth', 'quick-kth-largest'):
+        if problem_id == 'partial-hand':
             return f'{fn}({vector(inputs[0])}, {int(inputs[1])})'
-        if problem_id == 'insertion-into-list':
-            return f'{fn}({vector(inputs[0])}, {int(inputs[1])})'
-        if problem_id == 'merge-step':
-            return f'{fn}({vector(inputs[0])}, {vector(inputs[1])})'
         return f'{fn}({vector(inputs[0])})'
     array = java_array
-    if problem_id in ('selection-kth', 'quick-kth-largest'):
+    if problem_id == 'partial-hand':
         return f'Solution.{fn}({array(inputs[0])}, {int(inputs[1])})'
-    if problem_id == 'insertion-into-list':
-        return f'Solution.{fn}({array(inputs[0])}, {int(inputs[1])})'
-    if problem_id == 'merge-step':
-        return f'Solution.{fn}({array(inputs[0])}, {array(inputs[1])})'
     return f'Solution.{fn}({array(inputs[0])})'
 
 
@@ -79,7 +71,7 @@ def run_python(payload):
 
 def run_cpp(payload):
     lines = []
-    is_number = payload['problemId'] in ('selection-kth', 'merge-inversions', 'quick-kth-largest')
+    is_number = payload['problemId'] in ('how-many-picks', 'how-many-slides')
     for test in payload['tests']:
         call = call_parts(payload['problemId'], 'cpp', payload['fn'], test)
         expected = test['expected']
@@ -104,7 +96,7 @@ def run_cpp(payload):
 
 def run_java(payload):
     lines = []
-    is_number = payload['problemId'] in ('selection-kth', 'merge-inversions', 'quick-kth-largest')
+    is_number = payload['problemId'] in ('how-many-picks', 'how-many-slides')
     for test in payload['tests']:
         call = call_parts(payload['problemId'], 'java', payload['fn'], test)
         expected = test['expected']
