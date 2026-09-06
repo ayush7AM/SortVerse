@@ -73,7 +73,7 @@ Practice Mode provides coding exercises with a built-in editor, visible test cas
 | 📚 **Learn Mode** | Curated YouTube tutorials for each algorithm with a "Visualize this →" button that drops you straight into the action |
 | 🧍 **Single Visualizer** | Pick an algorithm, tweak the array size & speed, and watch it sort in real-time with color-coded bars |
 | 🏁 **Battle Arena** | All 6 algorithms race the **same shuffled array** simultaneously — with a live leaderboard tracking time, swaps & comparisons |
-| 🎯 **Practice Mode** | Solve 10 shuffled coding problems covering Bubble, Selection, Insertion, Merge, and Quick Sort |
+| 🎯 **Practice Mode** | Solve 10 shuffled coding problems covering Bubble, Selection, and Insertion Sort |
 | 📊 **Progress Chart** | SVG line chart showing how comparisons and swaps accumulate over time |
 | 🧠 **Complexity Analysis** | After each sort, see best/avg/worst case complexities with a verdict on how your run measured up |
 | 🎲 **Random & Custom Arrays** | Generate random arrays or type your own comma-separated values |
@@ -89,13 +89,11 @@ There are **10 total problems**, shuffled when the page loads:
 
 | Algorithm | Practice Problems |
 |---|---|
-| **Bubble Sort** | Implement Bubble Sort; optimize it with early termination |
-| **Selection Sort** | Implement Selection Sort; find the k-th smallest value |
-| **Insertion Sort** | Implement Insertion Sort; insert into a sorted list |
-| **Merge Sort** | Implement the merge step; count inversions |
-| **Quick Sort** | Implement Lomuto-partition Quick Sort; find the k-th largest value |
+| **Bubble Sort** | The Neighbor Swap (ascending); Flip the Line (descending); The Lazy Worker (early stop) |
+| **Selection Sort** | Trophy Shelf (pick smallest); Last One Standing (pick largest); Count the Moves (count swaps) |
+| **Insertion Sort** | The Card Hand (ascending); Tallest First (descending); Shift Counter (count shifts); Sort the Front (partial sort) |
 
-Solutions can be written in **JavaScript, Python, C++, or Java**. JavaScript runs in an isolated browser worker; Python, C++, and Java run through the local `server.py` execution endpoint. Submit becomes available only after every test passes, and solved problems persist in `localStorage`.
+Solutions can be written in **JavaScript, Python, C++, or Java**. JavaScript runs in an isolated browser worker. Python, C++, and Java use the deployed runner through a hosted compiler service, while the local `server.py` runner remains available for offline development. Submit becomes available only after every test passes, and solved problems persist in `localStorage`.
 
 ---
 

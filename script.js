@@ -183,104 +183,104 @@
   const PRACTICE_KEY = 'sortverse-practice-solved';
   const PRACTICE_PROBLEMS = [
     {
-      id:'bubble-basic', algo:'Bubble Sort', title:'Build Bubble Sort',
-      statement:'Implement Bubble Sort from scratch. Repeatedly compare neighboring values and swap them when they are out of order. Return the sorted array in ascending order.',
-      fn:'bubbleSort',
-      starter:`function bubbleSort(arr) {
-  // Sort arr in ascending order and return it.
+      id:'neighbor-swap', algo:'Bubble Sort', title:'The Neighbor Swap',
+      statement:'You can only compare and swap <strong>adjacent</strong> elements. Walk through the array repeatedly, swapping neighbors that are out of order, until everything is in ascending order. Return the sorted array.',
+      fn:'neighborSwap',
+      starter:`function neighborSwap(arr) {
+  // Only swap adjacent elements. Return arr sorted ascending.
   return arr;
 }`,
       tests:[{input:[[5,1,4,2,8]], expected:[1,2,4,5,8]}, {input:[[]], expected:[]}, {input:[[3,3,1,2]], expected:[1,2,3,3]}, {input:[[9,7,5,3,1]], expected:[1,3,5,7,9]}]
     },
     {
-      id:'bubble-early-exit', algo:'Bubble Sort', title:'Stop When Sorted',
-      statement:'Optimize Bubble Sort with early termination. If a full pass makes no swaps, the array is already sorted, so stop immediately and return it.',
-      fn:'bubbleSortOptimized',
-      starter:`function bubbleSortOptimized(arr) {
-  // Return arr sorted in ascending order.
+      id:'reverse-neighbors', algo:'Bubble Sort', title:'Flip the Line',
+      statement:'Same rule — you can only compare and swap adjacent elements. But this time arrange the array in <strong>descending</strong> order (largest first). Return the result.',
+      fn:'flipLine',
+      starter:`function flipLine(arr) {
+  // Only swap adjacent elements. Return arr sorted descending.
+  return arr;
+}`,
+      tests:[{input:[[5,1,4,2,8]], expected:[8,5,4,2,1]}, {input:[[]], expected:[]}, {input:[[3,3,1,2]], expected:[3,3,2,1]}, {input:[[1,9,3,7,5]], expected:[9,7,5,3,1]}]
+    },
+    {
+      id:'lazy-pass', algo:'Bubble Sort', title:'The Lazy Worker',
+      statement:'Sort using adjacent swaps, but be lazy about it — if a full pass through the array makes <strong>zero swaps</strong>, stop immediately. Return the sorted array in ascending order.',
+      fn:'lazyWorker',
+      starter:`function lazyWorker(arr) {
+  // Adjacent swaps, but stop early if a pass has no swaps.
   return arr;
 }`,
       tests:[{input:[[1,2,3,4]], expected:[1,2,3,4]}, {input:[[4,1,3,2]], expected:[1,2,3,4]}, {input:[[2,1]], expected:[1,2]}, {input:[[7]], expected:[7]}]
     },
     {
-      id:'selection-basic', algo:'Selection Sort', title:'Pick the Minimum',
-      statement:'Implement Selection Sort from scratch. For each position, find the smallest remaining value and place it there. Return the sorted array.',
-      fn:'selectionSort',
-      starter:`function selectionSort(arr) {
-  // Sort arr in ascending order and return it.
+      id:'pick-the-smallest', algo:'Selection Sort', title:'Trophy Shelf',
+      statement:'Imagine arranging trophies from smallest to tallest. Scan all the remaining items, <strong>pick the smallest</strong>, and place it in the next open spot. Repeat until the shelf is sorted. Return the sorted array.',
+      fn:'trophyShelf',
+      starter:`function trophyShelf(arr) {
+  // Repeatedly pick the smallest remaining item. Return arr sorted ascending.
   return arr;
 }`,
       tests:[{input:[[64,25,12,22,11]], expected:[11,12,22,25,64]}, {input:[[3,1,2]], expected:[1,2,3]}, {input:[[]], expected:[]}, {input:[[5,5,2,5]], expected:[2,5,5,5]}]
     },
     {
-      id:'selection-kth', algo:'Selection Sort', title:'Find the K-th Smallest',
-      statement:'Use selection-sort thinking to find the k-th smallest value without fully sorting the array. Here k is 1-based, and inputs contain valid k values.',
-      fn:'kthSmallest',
-      starter:`function kthSmallest(arr, k) {
-  // Return the 1-based k-th smallest value.
-  return arr[0];
+      id:'pick-the-largest', algo:'Selection Sort', title:'Last One Standing',
+      statement:'This time, scan the unsorted portion and <strong>pick the largest</strong> value. Place it at the end of the unsorted region. Repeat until the array is in ascending order. Return the sorted array.',
+      fn:'lastOneStanding',
+      starter:`function lastOneStanding(arr) {
+  // Repeatedly pick the largest remaining item and place it at the end.
+  return arr;
 }`,
-      tests:[{input:[[7,10,4,3,20,15],3], expected:7}, {input:[[1,2,3,4],1], expected:1}, {input:[[9,8,7,6],4], expected:9}, {input:[[5,5,2,8],2], expected:5}]
+      tests:[{input:[[64,25,12,22,11]], expected:[11,12,22,25,64]}, {input:[[3,1,2]], expected:[1,2,3]}, {input:[[]], expected:[]}, {input:[[4,4,2,1]], expected:[1,2,4,4]}]
     },
     {
-      id:'insertion-basic', algo:'Insertion Sort', title:'Build Insertion Sort',
-      statement:'Implement Insertion Sort from scratch. Grow a sorted prefix by inserting each next value into its correct position. Return the sorted array.',
-      fn:'insertionSort',
-      starter:`function insertionSort(arr) {
-  // Sort arr in ascending order and return it.
+      id:'how-many-picks', algo:'Selection Sort', title:'Count the Moves',
+      statement:'Sort the array by repeatedly finding the minimum and placing it at the front — but instead of returning the sorted array, return the <strong>number of swaps</strong> you performed. A swap where the element is already in the correct position still counts.',
+      fn:'countMoves',
+      starter:`function countMoves(arr) {
+  // Sort by picking the minimum. Return the number of swaps performed.
+  return 0;
+}`,
+      tests:[{input:[[1,2,3]], expected:3}, {input:[[3,1,2]], expected:3}, {input:[[5,4,3,2,1]], expected:5}, {input:[[2,1]], expected:2}]
+    },
+    {
+      id:'slide-into-place', algo:'Insertion Sort', title:'The Card Hand',
+      statement:'You are dealt cards one at a time. For each new card, <strong>slide</strong> it into the correct position among the cards you have already sorted. Return the final hand in ascending order.',
+      fn:'cardHand',
+      starter:`function cardHand(arr) {
+  // Slide each element into its sorted position. Return arr sorted ascending.
   return arr;
 }`,
       tests:[{input:[[12,11,13,5,6]], expected:[5,6,11,12,13]}, {input:[[4,3,2,1]], expected:[1,2,3,4]}, {input:[[1,2,3]], expected:[1,2,3]}, {input:[[2,1,2,0]], expected:[0,1,2,2]}]
     },
     {
-      id:'insertion-into-list', algo:'Insertion Sort', title:'Insert Into a Sorted List',
-      statement:'Insert one value into an already sorted array and return a new sorted array. Do not mutate the input array.',
-      fn:'insertSorted',
-      starter:`function insertSorted(sorted, value) {
-  // Return a new sorted array containing value.
-  return sorted;
-}`,
-      tests:[{input:[[1,3,5,7],4], expected:[1,3,4,5,7]}, {input:[[],2], expected:[2]}, {input:[[2,4,6],1], expected:[1,2,4,6]}, {input:[[1,2,2,4],2], expected:[1,2,2,2,4]}]
-    },
-    {
-      id:'merge-step', algo:'Merge Sort', title:'Merge Two Sorted Halves',
-      statement:'Implement the merge step used by Merge Sort. Combine two sorted arrays into one sorted array in linear time, without relying on a built-in sort.',
-      fn:'mergeSorted',
-      starter:`function mergeSorted(left, right) {
-  // Return one sorted array containing both halves.
-  return left.concat(right);
-}`,
-      tests:[{input:[[1,4,7],[2,3,6]], expected:[1,2,3,4,6,7]}, {input:[[],[1,2]], expected:[1,2]}, {input:[[0,5],[]], expected:[0,5]}, {input:[[2,2,9],[1,2,8]], expected:[1,2,2,2,8,9]}]
-    },
-    {
-      id:'merge-inversions', algo:'Merge Sort', title:'Count Inversions',
-      statement:'Count pairs of indices i and j where i < j but arr[i] > arr[j]. Use a merge-sort strategy so the count scales better than checking every pair.',
-      fn:'countInversions',
-      starter:`function countInversions(arr) {
-  // Return the number of inversions in arr.
-  return 0;
-}`,
-      tests:[{input:[[1,20,6,4,5]], expected:5}, {input:[[1,2,3,4]], expected:0}, {input:[[4,3,2,1]], expected:6}, {input:[[2,1,3,1,2]], expected:4}]
-    },
-    {
-      id:'quick-lomuto', algo:'Quick Sort', title:'Partition with Lomuto',
-      statement:'Implement Quick Sort using Lomuto partitioning: choose the last value as pivot, partition smaller values to its left, then recurse. Return the sorted array.',
-      fn:'quickSort',
-      starter:`function quickSort(arr) {
-  // Sort arr in ascending order and return it.
+      id:'reverse-slide', algo:'Insertion Sort', title:'Tallest First',
+      statement:'Same card-hand technique — slide each element into position — but this time arrange the hand in <strong>descending</strong> order (largest first). Return the result.',
+      fn:'tallestFirst',
+      starter:`function tallestFirst(arr) {
+  // Slide each element into position. Return arr sorted descending.
   return arr;
 }`,
-      tests:[{input:[[10,7,8,9,1,5]], expected:[1,5,7,8,9,10]}, {input:[[3,1,2]], expected:[1,2,3]}, {input:[[4,4,2,1]], expected:[1,2,4,4]}, {input:[[]], expected:[]}]
+      tests:[{input:[[12,11,13,5,6]], expected:[13,12,11,6,5]}, {input:[[1,2,3,4]], expected:[4,3,2,1]}, {input:[[5]], expected:[5]}, {input:[[3,3,1,2]], expected:[3,3,2,1]}]
     },
     {
-      id:'quick-kth-largest', algo:'Quick Sort', title:'Find the K-th Largest',
-      statement:'Use partitioning to find the k-th largest value, where k is 1-based. You may sort a copy or narrow the search range with a selection strategy.',
-      fn:'kthLargest',
-      starter:`function kthLargest(arr, k) {
-  // Return the 1-based k-th largest value.
-  return arr[0];
+      id:'how-many-slides', algo:'Insertion Sort', title:'Shift Counter',
+      statement:'Sort the array by sliding elements into position, but instead of returning the sorted array, return the <strong>total number of shifts</strong> (individual element moves) you performed.',
+      fn:'shiftCounter',
+      starter:`function shiftCounter(arr) {
+  // Sort by sliding elements. Return the total number of shifts.
+  return 0;
 }`,
-      tests:[{input:[[3,2,1,5,6,4],2], expected:5}, {input:[[7,10,4,3,20,15],1], expected:20}, {input:[[1,2,3,4],4], expected:1}, {input:[[5,5,2,8],2], expected:5}]
+      tests:[{input:[[1,2,3,4]], expected:0}, {input:[[4,3,2,1]], expected:6}, {input:[[2,1,3,1,2]], expected:4}, {input:[[5,1,4,2,8]], expected:4}]
+    },
+    {
+      id:'partial-hand', algo:'Insertion Sort', title:'Sort the Front',
+      statement:'Given an array and a number <code>k</code>, sort only the <strong>first k elements</strong> using the sliding technique. Leave the rest of the array untouched. Return the full array.',
+      fn:'sortFront',
+      starter:`function sortFront(arr, k) {
+  // Sort only the first k elements by sliding. Return the full array.
+  return arr;
+}`,
+      tests:[{input:[[5,3,1,4,2],3], expected:[1,3,5,4,2]}, {input:[[9,7,8,6],2], expected:[7,9,8,6]}, {input:[[4,3,2,1],4], expected:[1,2,3,4]}, {input:[[1,2,3],1], expected:[1,2,3]}]
     }
   ];
 
@@ -309,17 +309,17 @@
   }
   function practiceStarter(problem, language){
     const names = {
-      'bubble-basic':['bubbleSort','arr'], 'bubble-early-exit':['bubbleSortOptimized','arr'],
-      'selection-basic':['selectionSort','arr'], 'selection-kth':['kthSmallest','arr, k'],
-      'insertion-basic':['insertionSort','arr'], 'insertion-into-list':['insertSorted','sorted, value'],
-      'merge-step':['mergeSorted','left, right'], 'merge-inversions':['countInversions','arr'],
-      'quick-lomuto':['quickSort','arr'], 'quick-kth-largest':['kthLargest','arr, k']
+      'neighbor-swap':['neighborSwap','arr'], 'reverse-neighbors':['flipLine','arr'],
+      'lazy-pass':['lazyWorker','arr'], 'pick-the-smallest':['trophyShelf','arr'],
+      'pick-the-largest':['lastOneStanding','arr'], 'how-many-picks':['countMoves','arr'],
+      'slide-into-place':['cardHand','arr'], 'reverse-slide':['tallestFirst','arr'],
+      'how-many-slides':['shiftCounter','arr'], 'partial-hand':['sortFront','arr, k']
     }[problem.id];
     if (language === 'javascript') return problem.starter;
     if (language === 'python') return 'def ' + names[0] + '(' + names[1] + '):\n    # Return the requested result.\n    pass';
-    const returnsNumber = problem.id === 'selection-kth' || problem.id === 'merge-inversions' || problem.id === 'quick-kth-largest';
-    const cppArgs = problem.id === 'selection-kth' || problem.id === 'quick-kth-largest' ? 'vector<int> arr, int k' : problem.id === 'insertion-into-list' ? 'vector<int> sorted, int value' : problem.id === 'merge-step' ? 'vector<int> left, vector<int> right' : 'vector<int> arr';
-    const javaArgs = problem.id === 'selection-kth' || problem.id === 'quick-kth-largest' ? 'int[] arr, int k' : problem.id === 'insertion-into-list' ? 'int[] sorted, int value' : problem.id === 'merge-step' ? 'int[] left, int[] right' : 'int[] arr';
+    const returnsNumber = problem.id === 'how-many-picks' || problem.id === 'how-many-slides';
+    const cppArgs = problem.id === 'partial-hand' ? 'vector<int> arr, int k' : 'vector<int> arr';
+    const javaArgs = problem.id === 'partial-hand' ? 'int[] arr, int k' : 'int[] arr';
     if (language === 'cpp') return '#include <vector>\nusing namespace std;\n\n' + (returnsNumber ? 'int ' : 'vector<int> ') + names[0] + '(' + cppArgs + ') {\n    // Return the requested result.\n    ' + (returnsNumber ? 'return 0;' : 'return arr;') + '\n}';
     return 'import java.util.*;\n\nclass Solution {\n    public static ' + (returnsNumber ? 'int ' : 'int[] ') + names[0] + '(' + javaArgs + ') {\n        // Return the requested result.\n        ' + (returnsNumber ? 'return 0;' : 'return arr;') + '\n    }\n}';
   }
@@ -381,7 +381,12 @@
     };
     if (practiceLanguage !== 'javascript'){
       fetch('/api/run', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({language:practiceLanguage, problemId:problem.id, fn:problem.fn, code:editor.value, tests:problem.tests})})
-        .then(response => response.json().then(data => ({ok:response.ok, data:data})))
+        .then(response => response.text().then(text => {
+          let data;
+          try { data = JSON.parse(text); }
+          catch (e) { throw new Error('The Practice runner is unavailable on this deployment. Use the local server.'); }
+          return {ok:response.ok, data:data};
+        }))
         .then(result => { if (!result.ok || result.data.error) throw new Error(result.data.error || 'The local runner failed.'); showResults(result.data.results); })
         .catch(error => { status.textContent = error.message; runBtn.disabled = false; });
       return;
